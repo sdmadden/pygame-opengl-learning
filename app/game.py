@@ -14,6 +14,8 @@ class Game:
   x = 0
   y = 0
   z = 1
+  z_acceleration = 0
+  gravity = -9.81
   angle = 0
 
   def game_input(self):
@@ -34,8 +36,12 @@ class Game:
     if pressed[pygame.K_e]:
       self.y -= (0.1 * math.cos(self.angle))
       self.x += (0.1 * math.sin(self.angle))
+    if pressed[pygame.K_SPACE]:
+      self.z_acceleration = 0.5
 
   def game_update(self):
+    self.z_acceleration += self.gravity / 60
+    self.z = max(self.z + self.z_acceleration, 1)
     glLoadIdentity()
     gluPerspective(45, (self.width / self.height), 0.1, 40)
     gluLookAt(self.x, self.y, self.z, self.x + 100 * math.cos(self.angle), self.y + 100 * math.sin(self.angle), 0, 0, 0, 1)

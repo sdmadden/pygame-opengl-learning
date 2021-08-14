@@ -6,11 +6,20 @@ from OpenGL.GL import *
 from OpenGL.GLU import *
 
 from map2 import Map
+from thing import Thing
 
 class Game:
   done = False
   clock = pygame.time.Clock()
   game_map = Map()
+  thing = Thing([
+    (50, 50, 50), (60, 50, 50), (60, 60, 50), (50, 60, 50),
+    (50, 50, 60), (60, 50, 60), (60, 60, 60), (50, 60, 60)
+  ], [
+    (0,1), (1,2), (2,3), (3,0),
+    (0,4), (1,5), (2,6), (3,7),
+    (4,5), (5,6), (6,7), (7,4)
+  ])
   x = 0
   y = 0
   z = 5
@@ -66,6 +75,7 @@ class Game:
   def game_display(self):
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT)
     self.game_map.display()
+    self.thing.display()
 
   def __init__(self, width, height):
     pygame.init()

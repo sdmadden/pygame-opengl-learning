@@ -26,29 +26,28 @@ class MapNode:
       edge.display()
 
 class Map:
-  node_width = 1
-  node_height = 1
+  node_width = 10
+  node_height = 10
   node_columns = 10
   node_rows = 10
   grid = []
 
   def __init__(self):
     for i in range(self.node_rows):
+      i *= self.node_width
       for j in range(self.node_columns):
+        j *= self.node_height
+
         edges = [
           MapEdge((i, j, 0), (i, j + self.node_height, 0)),
           MapEdge((i, j, 0), (i + self.node_width, j, 0))
         ]
 
-        if(i == self.node_rows - 1):
-          edges.append(
-            MapEdge((i + self.node_width, j, 0), (i + self.node_width, j + self.node_height, 0))
-          )
+        if(i / self.node_width == self.node_rows - 1):
+          edges.append(MapEdge((i + self.node_width, j, 0), (i + self.node_width, j + self.node_height, 0)))
+        if(j / self.node_height == self.node_columns - 1):
+          edges.append(MapEdge((i, j + self.node_height, 0), (i + self.node_width, j + self.node_height, 0)))
 
-        if(j == self.node_columns - 1):
-          edges.append(
-            MapEdge((i, j + self.node_height, 0), (i + self.node_width, j + self.node_height, 0))
-          )
         self.grid.append(MapNode((i, j, 0), self.node_width, self.node_height, 0, edges))
 
   def display(self):

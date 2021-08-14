@@ -13,38 +13,45 @@ class Game:
   game_map = Map()
   x = 0
   y = 0
-  z = 1
+  z = 5
+  z_base = z
   z_acceleration = 0
   gravity = -9.81
   angle = 0
+  far_away = 100
+  max_distance = 10000
+  fps = 60
+
 
   def game_input(self):
     pressed = pygame.key.get_pressed()
     if pressed[pygame.K_a]:
-      self.angle = self.angle + math.pi / 60
+      self.angle = self.angle + math.pi / self.fps
     if pressed[pygame.K_d]:
-      self.angle = self.angle - math.pi / 60
+      self.angle = self.angle - math.pi / self.fps
     if pressed[pygame.K_w]:
-      self.y += (0.1 * math.sin(self.angle))
-      self.x += (0.1 * math.cos(self.angle))
+      self.y += math.sin(self.angle)
+      self.x += math.cos(self.angle)
     if pressed[pygame.K_s]:
-      self.y -= (0.1 * math.sin(self.angle))
-      self.x -= (0.1 * math.cos(self.angle))
+      self.y -= math.sin(self.angle)
+      self.x -= math.cos(self.angle)
     if pressed[pygame.K_q]:
-      self.y += (0.1 * math.cos(self.angle))
-      self.x -= (0.1 * math.sin(self.angle))
+      self.y += math.cos(self.angle)
+      self.x -= math.sin(self.angle)
     if pressed[pygame.K_e]:
-      self.y -= (0.1 * math.cos(self.angle))
-      self.x += (0.1 * math.sin(self.angle))
+      self.y -= math.cos(self.angle)
+      self.x += math.sin(self.angle)
     if pressed[pygame.K_SPACE]:
       self.z_acceleration = 0.5
+    if pressed[pygame.K_ESCAPE]:
+      self.done = True
 
   def game_update(self):
-    self.z_acceleration += self.gravity / 60
-    self.z = max(self.z + self.z_acceleration, 1)
+    self.z_acceleration += self.gravity / self.fps
+    self.z = max(self.z + self.z_acceleration, self.z_base)
     glLoadIdentity()
-    gluPerspective(45, (self.width / self.height), 0.1, 40)
-    gluLookAt(self.x, self.y, self.z, self.x + 100 * math.cos(self.angle), self.y + 100 * math.sin(self.angle), 0, 0, 0, 1)
+    gluPerspective(45, (self.width / self.height), 0.1, self.max_distance)
+    gluLookAt(self.x, self.y, self.z, self.x + self.far_away * math.cos(self.angle), self.y + self.far_away * math.sin(self.angle), 0, 0, 0, 1)
 
   def game_display(self):
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT)
@@ -66,7 +73,7 @@ class Game:
       self.game_display()
 
       pygame.display.flip()
-      self.clock.tick(60)
+      self.clock.tick(self.fps)
 
 if __name__ == '__main__':
     game = Game(800, 600)

@@ -22,8 +22,14 @@ class Game:
   max_distance = 10000
   fps = 60
 
-
   def game_input(self):
+    for event in pygame.event.get():
+      if event.type == pygame.QUIT:
+        self.done = True
+      if event.type == pygame.MOUSEMOTION:
+        dx, dy = event.rel
+        self.angle = self.angle - math.pi * dx / (self.fps * 10)
+
     pressed = pygame.key.get_pressed()
     if pressed[pygame.K_a]:
       self.angle = self.angle + math.pi / self.fps
@@ -62,12 +68,10 @@ class Game:
     self.width = width
     self.height = height
     pygame.display.set_mode((width , height), DOUBLEBUF|OPENGL)
+    pygame.event.set_grab(True)
+    pygame.mouse.set_visible(False)
 
     while not self.done:
-      for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-          self.done = True
-
       self.game_input()
       self.game_update()
       self.game_display()

@@ -18,9 +18,12 @@ class Game:
   z_acceleration = 0
   gravity = -9.81
   angle = 0
+  z_angle = 0
   far_away = 100
   max_distance = 10000
   fps = 60
+  min_z_down = -math.pi / 2
+  max_z_up = math.pi / 2
 
   def game_input(self):
     for event in pygame.event.get():
@@ -28,12 +31,13 @@ class Game:
         self.done = True
       if event.type == pygame.MOUSEMOTION:
         dx, dy = event.rel
-        self.angle = self.angle - math.pi * dx / (self.fps * 10)
+        self.angle = self.angle - math.pi * dx / (self.fps * 15)
+        self.z_angle = max(self.min_z_down, min(self.z_angle - math.pi * dy / (self.fps * 15), self.max_z_up))
 
     pressed = pygame.key.get_pressed()
-    if pressed[pygame.K_a]:
+    if pressed[pygame.K_q]:
       self.angle = self.angle + math.pi / self.fps
-    if pressed[pygame.K_d]:
+    if pressed[pygame.K_e]:
       self.angle = self.angle - math.pi / self.fps
     if pressed[pygame.K_w]:
       self.y += math.sin(self.angle)
@@ -41,10 +45,10 @@ class Game:
     if pressed[pygame.K_s]:
       self.y -= math.sin(self.angle)
       self.x -= math.cos(self.angle)
-    if pressed[pygame.K_q]:
+    if pressed[pygame.K_a]:
       self.y += math.cos(self.angle)
       self.x -= math.sin(self.angle)
-    if pressed[pygame.K_e]:
+    if pressed[pygame.K_d]:
       self.y -= math.cos(self.angle)
       self.x += math.sin(self.angle)
     if pressed[pygame.K_SPACE]:
@@ -57,7 +61,7 @@ class Game:
     self.z = max(self.z + self.z_acceleration, self.z_base)
     glLoadIdentity()
     gluPerspective(45, (self.width / self.height), 0.1, self.max_distance)
-    gluLookAt(self.x, self.y, self.z, self.x + self.far_away * math.cos(self.angle), self.y + self.far_away * math.sin(self.angle), 0, 0, 0, 1)
+    gluLookAt(self.x, self.y, self.z, self.x + self.far_away * math.cos(self.angle), self.y + self.far_away * math.sin(self.angle), self.z + self.far_away * math.sin(self.z_angle), 0, 0, 1)
 
   def game_display(self):
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT)

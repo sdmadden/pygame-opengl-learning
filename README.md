@@ -8,8 +8,7 @@ py .\app\game.py
 ```
 
 # Controls
-wasd + mouse
-
-qe is also left/right turn
-
-esc to quit
+- wasd + mouse
+- qe is also left/right turn
+- esc to quit
+- spacebar to go up
